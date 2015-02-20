@@ -3,6 +3,9 @@ package nearsoft.academy.bigdata.recommendation;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.junit.Test;
 
+import org.apache.mahout.cf.taste.impl.model.MemoryIDMigrator;
+
+
 import java.io.IOException;
 import java.util.List;
 
@@ -15,16 +18,16 @@ public class MovieRecommenderTest {
     public void testDataInfo() throws IOException, TasteException {
         //download movies.txt.gz from 
         //    http://snap.stanford.edu/data/web-Movies.html
-        //MovieRecommender recommender = new MovieRecommender("/home/pduarte/Nearsoft/big-data/data.dat");
-/*        assertEquals(7911684, recommender.getTotalReviews());
+        MovieRecommender recommender = new MovieRecommender("/home/pduarte/Nearsoft/big-data/movies.txt.gz");
+        assertEquals(7911684, recommender.getTotalReviews());
         assertEquals(253059, recommender.getTotalProducts());
-        assertEquals(889176, recommender.getTotalUsers());*/
+        assertEquals(889176, recommender.getTotalUsers());
 
-        //List<String> recommendations = recommender.getRecommendationsForUser("A141HP4LYPWMSR");
-/*        assertThat(recommendations, hasItem("B0002O7Y8U"));
+        List<String> recommendations = recommender.getRecommendationsForUser("A141HP4LYPWMSR");
+        assertThat(recommendations, hasItem("B0002O7Y8U"));
         assertThat(recommendations, hasItem("B00004CQTF"));
-        assertThat(recommendations, hasItem("B000063W82"));*/
-        TextReducer.textReducer("/home/pduarte/Nearsoft/big-data/movies.txt.gz");
+        assertThat(recommendations, hasItem("B000063W82"));
+
     }
 
 }
