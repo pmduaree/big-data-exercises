@@ -26,5 +26,13 @@
           <version>4.7</version>
           <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.mahout</groupId>
+        <artifactId>mahout-core</artifactId>
+        <version>0.9</version>
+    </dependency>
   </dependencies>
 </project>
+
+
+<!-- mvn install:install-file -Dfile=/some/path/my-hadoop.jar -DgroupId=some.group -DartifactId=hadoop -Dversion=some.version -Dpackaging=jar -->
