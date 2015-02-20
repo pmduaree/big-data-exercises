@@ -15,7 +15,7 @@ public class TextReducer {
     private BufferedWriter writer = null;
     private MemoryIDMigrator memoryIDMigrator;
     private String path;
-
+    private int numberOfLines = 0;
     public TextReducer(String path , MemoryIDMigrator m)
     {
         this.path = path;
@@ -45,30 +45,18 @@ public class TextReducer {
             String userId = substr(line, ':');
             line = is.readLine();
 
-            //need to read 3 more lines
+            //read until score's line
             while(line == null || line.equals("") || !line.matches("^review/score(.*)"))
-            {
                 line = is.readLine();
-                //System.out.println(line);
-                //System.out.println(line.matches("^review/score(.*)"));
 
-            }
-
-            //(line == null || line.equals("") || i != 3) //there was no score
-            //String x = line.substring(0, line.indexOf(':'));
-            //System.out.println("review/score".equals(x));
-            //System.out.println(x);
 
             if(line == null || line.equals("") || !line.matches("^review/score(.*)")) //there was no score
             {
-                //System.out.println(line);
-
                 while(line == null || !line.equals(""))
                     line = is.readLine();
                 continue;
             }
-            //System.out.println(line);
-            //the next line is score
+            //the curret line is the score
             String score = substr(line, ':');
             //store to file
             //<thread> if possible
@@ -80,7 +68,6 @@ public class TextReducer {
 
             //read the next line (should be the product id or null)
             line = is.readLine();
-            //System.out.println(i);
         }
         is.close();
         writer.close();
@@ -91,15 +78,12 @@ public class TextReducer {
     private void cleanBlock(String userId, String productId, String score) throws IOException
     {
         //instead of split. use indexOf & substring
-        //String[] arrayOfLines = block.split("\n");
-
-        //System.out.println(userId+","+productId+","+score);
 
         //write the user id 
         write(Long.toString(memoryIDMigrator.toLongID(userId.trim())));
         write(",");
 
-        //we need to store the product id as String and long:
+        //we need to store the product id as String and long, using a map:
         String productString = substr(productId.trim(), ':');
         long productLong = memoryIDMigrator.toLongID(productString);
         memoryIDMigrator.storeMapping(productLong, productString);
@@ -111,6 +95,12 @@ public class TextReducer {
         //wrie to a file the score of the review
         write(substr(score, ':'));
         write("\n");
+        numberOfLines++;
+    } 
+    //number of lines = number of reviews
+    public int getNumberOfLines()
+    {
+        return numberOfLines;
     }
     //creates a substring using only indexOf and substring
     private String substr(String line, char limit)

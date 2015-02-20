@@ -28,13 +28,14 @@ public  class MovieRecommender {
     public TextReducer textReducer;
     private MemoryIDMigrator memoryIDMigrator;
     //constructor
-    public MovieRecommender(String path)throws IOException,TasteException{    //constructor de la clase
-        //TextReducer.textReducer(path); //create a file names temp.csv with the parsed file
+    public MovieRecommender(String path)throws IOException,TasteException{    
 
+        //cleans the file using the text reducer class
         memoryIDMigrator = new MemoryIDMigrator();
         textReducer = new TextReducer(path, memoryIDMigrator);
         textReducer.clean();
 
+        //use the library to create the recommender system
         model = new FileDataModel(new File("temp.csv"));
         similarity = new PearsonCorrelationSimilarity(model);
         neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
@@ -45,34 +46,25 @@ public  class MovieRecommender {
     }
     public int getTotalReviews()
     {
-        return 7911684;
+        return textReducer.getNumberOfLines();
     }
     public int getTotalProducts()throws IOException,TasteException
     {
         return model.getNumItems();
-        //System.out.println(total);  //print the total of products
     }
 
     public int getTotalUsers()throws IOException,TasteException
     {
         return model.getNumUsers();
-        //System.out.println(total);  //print the total of users
     }
 
     public List<String> getRecommendationsForUser(String user) throws IOException,TasteException {
-        //int User = Integer.parseInt(user);
-
-        //List<RecommendedItem> recommendations = cachingRecommender.recommend(,100);
-        //System.out.println(memoryIDMigrator.toLongID(user));
 
         List<RecommendedItem> recommendations = cachingRecommender.recommend(memoryIDMigrator.toLongID(user),100);
         List<String> movieRecommenderList = new ArrayList<String>();
-        //System.out.println(recommendations.size());
         for (int i=0; i < recommendations.size() ; i++) {
-            movieRecommenderList.add(memoryIDMigrator.toStringID( recommendations.get(i).getItemID())); //here we need to remap to the other way using memoryIdMigrator map subclass
+            movieRecommenderList.add(memoryIDMigrator.toStringID( recommendations.get(i).getItemID())); 
         }
-        //System.out.println(recommendations);  //print all recommendations
-        System.out.println(movieRecommenderList);
         return movieRecommenderList;
     }
 
